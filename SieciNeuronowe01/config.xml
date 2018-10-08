@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<params>
+  <learning_coefficient>0.1</learning_coefficient>
+  <starting_weight_range>1</starting_weight_range>
+  <activate_function_true>1</activate_function_true>
+  <activate_function_false>-1</activate_function_false>
+  <add_bias>1</add_bias>
+</params>
