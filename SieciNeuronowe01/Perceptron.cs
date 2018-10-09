@@ -8,20 +8,24 @@ namespace SieciNeuronowe01
 {
     public abstract class Perceptron
     {
-        protected double threshold = 0;
+        protected double threshold;
         protected double[] input_weights;
         protected SimpleConfigXml configXml = new SimpleConfigXml(@"..\..\config.xml");
         protected double learning_coefficient;
 
-
-        public double Predict(double[] inputs)
+        protected double Net(double[] inputs)
         {
             double net = 0;
             for (int i = 0; i < inputs.Length; i++)
             {
                 net += inputs[i] * input_weights[i];
             }
-            return net > threshold ?
+            return net;
+        }
+
+        public double Predict(double[] inputs)
+        {
+             return Net(inputs) > threshold ?
                 configXml.GetDoubleValue("activate_function_true") :
                 configXml.GetDoubleValue("activate_function_false");
         }
@@ -30,6 +34,7 @@ namespace SieciNeuronowe01
         public Perceptron(int inputs)
         {
             learning_coefficient = configXml.GetDoubleValue("learning_coefficient");
+            threshold = configXml.GetDoubleValue("threshold");
             input_weights = new double[inputs];
             Random r = new Random();
             for (int i = 0; i < input_weights.Length; i++)

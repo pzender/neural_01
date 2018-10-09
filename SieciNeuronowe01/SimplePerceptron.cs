@@ -18,7 +18,7 @@ namespace SieciNeuronowe01
             {
                 
                 weights_changed = false;
-                Console.WriteLine($"Iteration {k}. Weights: {string.Join("; ", input_weights)}");
+                
                 foreach(double[] input_vector in learning_data.Keys)
                 {
                     double predicted = Predict(input_vector);
@@ -29,8 +29,10 @@ namespace SieciNeuronowe01
                         weights_changed = weights_changed || weight_change != 0;
                     }
                 }
-                k++;
+                if (k > 250) throw new InvalidOperationException("Infinite loop");
+                Console.WriteLine($"Iteration {k}. Weights: {string.Join("; ", input_weights)}");
                 Array.Copy(next_weights, input_weights, next_weights.Length);
+                k++;
             }
         }
         public SimplePerceptron(int inputs) : base(inputs) { }

@@ -8,18 +8,21 @@ namespace SieciNeuronowe01
 {
     class AdalinePerceptron : Perceptron
     {
-        double targetMSE = 0.5;
+        double targetMSE;
+
+        
 
         double MeanSquaredError(Dictionary<double[], double> learning_data)
         {
-            double mse = 0;
+            double tse = 0;
             foreach(var input in learning_data.Keys)
             {
-                double predicted = Predict(input);
-                mse += (learning_data[input] - predicted) * (learning_data[input] - predicted);
+                double net = Net(input);
+                
+                tse += (learning_data[input] - net) * (learning_data[input] - net);
             }
 
-            return mse;
+            return (tse/learning_data.Keys.First().Count());
         }
         public override void Learn(Dictionary<double[], double> learning_data)
         {
@@ -27,24 +30,28 @@ namespace SieciNeuronowe01
             double[] next_weights = new double[input_weights.Length];
             Array.Copy(input_weights, next_weights, next_weights.Length);
 
-            while (MeanSquaredError(learning_data) >= targetMSE)
+            while (MeanSquaredError(learning_data) > targetMSE)
             {
-                Console.WriteLine($"Iteration {k}. Weights: {string.Join("; ", input_weights)}");
-
                 foreach (var input_vector in learning_data.Keys)
                 {
-                    double predicted = Predict(input_vector);
+                    double net = Net(input_vector);
                     for (int j = 0; j < input_vector.Length; j++)
                     {
-                        double weight_change = learning_coefficient * (learning_data[input_vector] - predicted) * input_vector[j];
+                        double weight_change = 2 * learning_coefficient * (learning_data[input_vector] - net) * input_vector[j];
                         next_weights[j] += weight_change;
                     }
                 }
-                k++;
+                
+                if (k > 250) throw new InvalidOperationException("Infinite loop");
+                Console.WriteLine($"Iteration {k}. Weights: {string.Join("; ", input_weights)} *MSE: {MeanSquaredError(learning_data)}");
                 Array.Copy(next_weights, input_weights, next_weights.Length);
+                k++;
             }
         }
 
-        public AdalinePerceptron(int inputs) : base(inputs) { }
+        public AdalinePerceptron(int inputs) : base(inputs)
+        {
+            targetMSE = configXml.GetDoubleValue("targetMSE");
+        }
     }
 }

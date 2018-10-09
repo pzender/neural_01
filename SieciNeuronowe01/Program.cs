@@ -10,18 +10,43 @@ namespace SieciNeuronowe01
     {
         static void Main(string[] args)
         {
-            for (int i = 0; i < 20; i++)
+            Perceptron perceptron = null;
+            string cmd = "";
+            while (cmd != "exit")
             {
-                var data = InputDataGenerator.Generate();
-                Perceptron perceptron = new AdalinePerceptron(data.Keys.First().Count());
-                perceptron.Learn(data);
-
-                foreach (double[] inputvector in InputDataGenerator.Generate().Keys)
+                try
                 {
-                    Console.WriteLine($"{inputvector[0]} && {inputvector[1]} <=> {perceptron.Predict(inputvector)}");
-                }
+                    cmd = Console.ReadLine();
+                    InputDataGenerator inputDataGenerator = new InputDataGenerator();
+                    var data = inputDataGenerator.Generate();
+                    switch (cmd)
+                    {
+                        case "simple":
+                            perceptron = new SimplePerceptron(data.Keys.First().Count());
+                            break;
+                        case "adaline":
+                            perceptron = new AdalinePerceptron(data.Keys.First().Count());
+                            break;
+                        default:
+                            continue;
+                    }
+                    if (perceptron != null) {
+                        perceptron.Learn(data);
+                        foreach (double[] inputvector in inputDataGenerator.Generate().Keys)
+                        {
+                            Console.WriteLine($"{inputvector[0]} && {inputvector[1]} <=> {perceptron.Predict(inputvector)}");
+                        }
+                        foreach (var random_input in inputDataGenerator.GenerateRandom())
+                        {
+                            Console.WriteLine($"{random_input[0]} && {random_input[1]} <=> {perceptron.Predict(random_input)}");
+                        }
 
-                Console.ReadLine();
+                    }
+                }
+                catch(InvalidOperationException e)
+                {
+                    Console.WriteLine(e.Message);
+                }
             }
         }
     }
