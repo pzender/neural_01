@@ -9,16 +9,12 @@ namespace SieciNeuronowe01
     class AdalinePerceptron : Perceptron
     {
         double targetMSE;
-
-        
-
         double MeanSquaredError(Dictionary<double[], double> learning_data)
         {
             double tse = 0;
             foreach(var input in learning_data.Keys)
             {
                 double net = Net(input);
-                
                 tse += (learning_data[input] - net) * (learning_data[input] - net);
             }
 
@@ -29,9 +25,10 @@ namespace SieciNeuronowe01
             int k = 0;
             double[] next_weights = new double[input_weights.Length];
             Array.Copy(input_weights, next_weights, next_weights.Length);
-
-            while (MeanSquaredError(learning_data) > targetMSE)
+            double lastMSE = 0;
+            while (Math.Abs(lastMSE - MeanSquaredError(learning_data)) > targetMSE)
             {
+                lastMSE = MeanSquaredError(learning_data);
                 foreach (var input_vector in learning_data.Keys)
                 {
                     double net = Net(input_vector);

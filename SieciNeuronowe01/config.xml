@@ -6,5 +6,5 @@
   <activate_function_false>-1</activate_function_false>
   <add_bias>1</add_bias>
   <threshold>0</threshold>
-  <targetMSE>0.01</targetMSE>
+  <targetMSE>0.001</targetMSE>
 </params>
