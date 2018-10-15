@@ -8,7 +8,7 @@ namespace SieciNeuronowe01
 {
     class SimplePerceptron : Perceptron
     {        
-        public override void Learn(Dictionary<double[], double> learning_data)
+        public override int Learn(Dictionary<double[], double> learning_data)
         {
             int k = 0;
             double[] next_weights = new double[input_weights.Length];
@@ -29,11 +29,12 @@ namespace SieciNeuronowe01
                         weights_changed = weights_changed || weight_change != 0;
                     }
                 }
-                if (k > 250) throw new InvalidOperationException("Infinite loop");
+                if (k > 2500) throw new InvalidOperationException("Infinite loop");
                 Console.WriteLine($"Iteration {k}. Weights: {string.Join("; ", input_weights)}");
                 Array.Copy(next_weights, input_weights, next_weights.Length);
                 k++;
             }
+            return k;
         }
         public SimplePerceptron(int inputs) : base(inputs) { }
     }

@@ -12,6 +12,7 @@ namespace SieciNeuronowe01
         bool add_bias;
         double value_for_true;
         double value_for_false;
+        public static Random random = new Random();
 
         public Dictionary<double[], double> Generate()
         {
@@ -33,18 +34,45 @@ namespace SieciNeuronowe01
             };
         }
 
-        public List<double[]> GenerateRandom()
+        public Dictionary<double[], double> GenerateLightApprox()
         {
-            List<double[]> res = new List<double[]>();
-            Random r = new Random();
-            for(int i = 0; i < 5; i++)
+            double offset = (value_for_true - value_for_false) * 0.05;
+            if (add_bias) return new Dictionary<double[], double>
             {
-                if (add_bias)
-                    res.Add(new double[] { r.NextDouble(), r.NextDouble(), value_for_true });
-                else res.Add(new double[] { r.NextDouble(), r.NextDouble() });
-            }
-            return res;
+                { new double[] { value_for_false + offset, value_for_false + offset, value_for_true }, value_for_false },
+                { new double[] { value_for_false + offset, value_for_true - offset, value_for_true }, value_for_false },
+                { new double[] { value_for_true - offset, value_for_false + offset, value_for_true }, value_for_false },
+                { new double[] { value_for_true - offset, value_for_true - offset, value_for_true }, value_for_true }
+            };
+
+            else return new Dictionary<double[], double>
+            {
+                { new double[] { value_for_false + offset, value_for_false + offset }, value_for_false },
+                { new double[] { value_for_false + offset, value_for_true - offset }, value_for_false },
+                { new double[] { value_for_true - offset, value_for_false + offset }, value_for_false },
+                { new double[] { value_for_true - offset, value_for_true - offset}, value_for_true }
+            };
         }
+        public Dictionary<double[], double> GenerateStrongApprox()
+        {
+            double offset = (value_for_true - value_for_false) * 0.3;
+            if (add_bias) return new Dictionary<double[], double>
+            {
+                { new double[] { value_for_false + offset, value_for_false + offset, value_for_true }, value_for_false },
+                { new double[] { value_for_false + offset, value_for_true - offset, value_for_true }, value_for_false },
+                { new double[] { value_for_true - offset, value_for_false + offset, value_for_true }, value_for_false },
+                { new double[] { value_for_true - offset, value_for_true - offset, value_for_true }, value_for_true }
+            };
+
+            else return new Dictionary<double[], double>
+            {
+                { new double[] { value_for_false + offset, value_for_false + offset }, value_for_false },
+                { new double[] { value_for_false + offset, value_for_true - offset }, value_for_false },
+                { new double[] { value_for_true - offset, value_for_false + offset }, value_for_false },
+                { new double[] { value_for_true - offset, value_for_true - offset }, value_for_true }
+            };
+        }
+
         public InputDataGenerator()
         {
             add_bias = configXml.GetDoubleValue("add_bias") == 1;

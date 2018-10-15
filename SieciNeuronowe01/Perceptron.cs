@@ -29,17 +29,16 @@ namespace SieciNeuronowe01
                 configXml.GetDoubleValue("activate_function_true") :
                 configXml.GetDoubleValue("activate_function_false");
         }
-        public abstract void Learn(Dictionary<double[], double> learning_data);
+        public abstract int Learn(Dictionary<double[], double> learning_data);
 
         public Perceptron(int inputs)
         {
             learning_coefficient = configXml.GetDoubleValue("learning_coefficient");
             threshold = configXml.GetDoubleValue("threshold");
             input_weights = new double[inputs];
-            Random r = new Random();
             for (int i = 0; i < input_weights.Length; i++)
             {
-                input_weights[i] = 2 * (r.NextDouble() - 0.5) * configXml.GetDoubleValue("starting_weight_range");
+                input_weights[i] = 2 * (InputDataGenerator.random.NextDouble() - 0.5) * configXml.GetDoubleValue("starting_weight_range");
             }
         }
     }
